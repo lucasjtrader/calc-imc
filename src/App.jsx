@@ -1,4 +1,4 @@
-// import { data } from "./data/data";
+import { data } from "./data/data";
 
 import ImcCalc from "./components/ImcCalc";
 import "./App.css";
@@ -17,6 +17,23 @@ function App() {
     const imcResult = (weightFloat / (heightFloat * heightFloat)).toFixed(1);
 
     setImc(imcResult);
+
+    data.map((e) => {
+      if (imcResult >= e.min && imcResult <= e.max) {
+        setInfo(e.info);
+        setInfoClass(e.infoClass);
+      }
+    });
+
+    if (!info) return;
+  };
+
+  const resetCalc = (e) => {
+    e.preventDefault();
+
+    setImc("");
+    setInfo("");
+    setInfoClass("");
   };
 
   const [imc, setImc] = useState("");
@@ -25,7 +42,11 @@ function App() {
 
   return (
     <div className="container">
-      {!imc ? <ImcCalc calcImc={calcImc} /> : <ImcTable />}
+      {!imc ? (
+        <ImcCalc calcImc={calcImc} />
+      ) : (
+        <ImcTable data={data} imc={imc} info={info} infoClass={infoClass} resetCalc={resetCalc} />
+      )}
     </div>
   );
 }
